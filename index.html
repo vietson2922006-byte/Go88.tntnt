@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GO88 MD5 - BẢN FULL 30S</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: none; }
+        body { background: #000; font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; }
+        #main-container { width: 100vw; height: 100vh; background: radial-gradient(circle, #5e0000, #000); position: relative; display: none; flex-direction: column; align-items: center; }
+
+        /* HEADER */
+        .header { width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.9); border-bottom: 2px solid gold; align-items: center; z-index: 100; }
+
+        /* BÀN CƯỢC */
+        .table-area { position: relative; width: 95%; height: 260px; background: #700000; border: 4px solid gold; border-radius: 130px; margin-top: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-shadow: 0 0 30px #000; }
+        .bet-box { width: 110px; height: 110px; border-radius: 50%; border: 3px solid gold; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #111; cursor: pointer; position: relative; }
+        .total-bet { position: absolute; top: -30px; font-size: 13px; color: yellow; width: 120px; text-align: center; font-weight: bold; }
+        
+        /* BÁT ĐĨA */
+        #plate-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; z-index: 10; }
+        #plate { width: 100%; height: 100%; background: #eee; border: 5px solid #ccc; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .dice { width: 30px; height: 30px; background: white; color: black; border-radius: 5px; display: flex; justify-content: center; align-items: center; font-weight: bold; margin: 0 2px; }
+        #bowl { position: absolute; inset: 0; background: radial-gradient(circle, #444, #111); border: 2px solid gold; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 20; cursor: grab; }
+
+        /* CHIPS DƯỚI BÀN */
+        #chip-area { margin-top: 40px; display: flex; gap: 10px; justify-content: center; width: 100%; }
+        .chip { width: 65px; height: 65px; background: #222; border: 2px solid gold; border-radius: 50%; color: gold; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 13px; }
+        .chip.active { background: gold; color: black; border-color: white; transform: scale(1.1); }
+
+        /* POPUPS */
+        .popup { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; }
+        .popup-content { background: #1a1a1a; border: 2px solid gold; border-radius: 15px; width: 350px; padding: 20px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; }
+        .btn-gold { width: 100%; padding: 12px; background: linear-gradient(gold, #b8860b); border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: black; margin-top: 5px; }
+        
+        .bank-info { background: #333; padding: 10px; border-radius: 8px; text-align: left; margin-bottom: 15px; font-size: 13px; border-left: 4px solid gold; }
+        .qr-box { background: white; padding: 10px; margin: 10px auto; width: 160px; height: 160px; border-radius: 10px; }
+
+        /* AUTH */
+        .auth-overlay { position: fixed; inset: 0; background: #1a0000; z-index: 4000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: rgba(0,0,0,0.95); border: 2px solid gold; padding: 25px; border-radius: 15px; width: 320px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div id="auth-container" class="auth-overlay">
+    <div class="auth-box">
+        <h2 style="color:gold; margin-bottom:15px;">GO88 MD5</h2>
+        <input type="text" id="username" placeholder="Tên đăng nhập">
+        <input type="password" id="password" placeholder="Mật khẩu">
+        <div id="reg-extra" style="display:none;"><input type="password" id="confirm-pass" placeholder="Xác nhận mật khẩu"></div>
+        <button class="btn-gold" id="auth-btn" onclick="submitAuth()">ĐĂNG NHẬP</button>
+        <p onclick="toggleAuth()" style="font-size:12px; color:gray; margin-top:10px; cursor:pointer;">Chưa có tài khoản? Đăng ký</p>
+    </div>
+</div>
+
+<div id="nick-container" class="auth-overlay" style="display:none; z-index:4500;">
+    <div class="auth-box">
+        <h3 style="color:gold;">BIỆT DANH</h3>
+        <input type="text" id="nickname-input" placeholder="Tên hiển thị...">
+        <button class="btn-gold" onclick="saveNickname()">VÀO GAME</button>
+    </div>
+</div>
+
+<div id="main-container">
+    <div class="header">
+        <div><button onclick="openTop()" style="background:gold; border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold;">🏆 TOP</button> <span id="u-nick" style="color:#00f2ff; font-weight:bold;">...</span></div>
+        <div id="u-bal" style="color:gold; font-weight:bold;">0</div>
+        <div>
+            <button onclick="openTab('dep')" style="background:#0f0; border:none; padding:4px 8px; border-radius:4px; font-weight:bold;">NẠP</button>
+            <button onclick="openTab('wd')" style="background:orange; border:none; padding:4px 8px; border-radius:4px; font-weight:bold;">RÚT</button>
+        </div>
+    </div>
+
+    <div class="table-area">
+        <div class="bet-box" onclick="placeBet('TÀI')" style="border-color:#00f2ff;">
+            <div class="total-bet" id="total-tai">0</div>
+            <span style="color:#00f2ff; font-weight:bold; font-size:26px;">TÀI</span>
+            <div id="my-tai" style="color:#0f0; font-size:11px;"></div>
+        </div>
+        <div id="plate-center">
+            <div id="plate">
+                <div id="d1" class="dice">?</div><div id="d2" class="dice">?</div><div id="d3" class="dice">?</div>
+                <div id="bowl" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+                    <div id="timer" style="font-size:35px; color:yellow; font-weight:bold;">30</div>
+                </div>
+            </div>
+        </div>
+        <div class="bet-box" onclick="placeBet('XỈU')" style="border-color:#ff004c;">
+            <div class="total-bet" id="total-xiu">0</div>
+            <span style="color:#ff004c; font-weight:bold; font-size:26px;">XỈU</span>
+            <div id="my-xiu" style="color:#0f0; font-size:11px;"></div>
+        </div>
+    </div>
+
+    <div id="chip-area">
+        <div class="chip" onclick="setChip(500000, this)">500K</div>
+        <div class="chip active" onclick="setChip(1000000, this)">1M</div>
+        <div class="chip" onclick="setChip(5000000, this)">5M</div>
+        <div class="chip" onclick="setChip(10000000, this)">10M</div>
+    </div>
+</div>
+
+<div id="pop-dep" class="popup">
+    <div class="popup-content">
+        <h3 style="color:gold;">NẠP TIỀN VIETCOMBANK</h3>
+        <div class="bank-info">Ngân hàng: <span>Vietcombank</span><br>STK: <span>9385910341</span><br>Nội dung: <span id="dep-memo">...</span></div>
+        <input type="number" id="in-dep" placeholder="Số tiền..." oninput="updateQR()">
+        <div class="qr-box"><img id="qr-img" src="" style="width:100%; height:100%;"></div>
+        <button class="btn-gold" onclick="bank('NẠP')">XÁC NHẬN ĐÃ CHUYỂN</button>
+        <button onclick="closePop()" style="background:none; border:none; color:white; margin-top:10px;">Đóng</button>
+        <div id="list-dep"></div>
+    </div>
+</div>
+
+<div id="pop-wd" class="popup">
+    <div class="popup-content">
+        <h3 style="color:gold;">RÚT TIỀN</h3>
+        <select id="wd-bank"><option value="Vietcombank">Vietcombank</option><option value="MB">MBBank</option><option value="Techcombank">Techcombank</option></select>
+        <input type="text" id="wd-stk" placeholder="Số tài khoản nhận">
+        <input type="text" id="wd-name" placeholder="Tên chủ tài khoản">
+        <input type="number" id="in-wd" placeholder="Số tiền rút">
+        <button class="btn-gold" onclick="bank('RÚT')">GỬI LỆNH RÚT</button>
+        <button onclick="closePop()" style="background:none; border:none; color:white; margin-top:10px;">Đóng</button>
+        <div id="list-wd"></div>
+    </div>
+</div>
+
+<div id="pop-top" class="popup"><div class="popup-content"><h3>🏆 TOP ĐẠI GIA</h3><div id="top-list"></div><button class="btn-gold" onclick="closePop()">ĐÓNG</button></div></div>
+
+<script>
+    let user = null; let isReg = false; let currentChip = 1000000;
+    let myBets = {TÀI: 0, XỈU: 0}; let botBets = {TÀI: 0, XỈU: 0}; let state = "BETTING";
+
+    function toggleAuth() { isReg = !isReg; document.getElementById('reg-extra').style.display = isReg ? 'block' : 'none'; }
+    function submitAuth() {
+        const u = document.getElementById('username').value.trim(); const p = document.getElementById('password').value;
+        if(isReg) { localStorage.setItem('u_'+u, JSON.stringify({u, p, nick:"", bal:2000000, logs:[]})); alert("Đăng ký thành công!"); toggleAuth(); }
+        else {
+            user = JSON.parse(localStorage.getItem('u_'+u));
+            if(!user || user.p !== p) return alert("Sai thông tin!");
+            document.getElementById('auth-container').style.display='none';
+            if(!user.nick) document.getElementById('nick-container').style.display='flex'; else enter();
+        }
+    }
+    function saveNickname() { user.nick = document.getElementById('nickname-input').value; save(); document.getElementById('nick-container').style.display='none'; enter(); }
+    function enter() { document.getElementById('main-container').style.display='flex'; document.getElementById('u-nick').innerText = user.nick; update(); loop(); }
+
+    function runBots() {
+        if(state !== "BETTING") return;
+        botBets[Math.random() > 0.5 ? "TÀI" : "XỈU"] += Math.floor(Math.random() * 5000000) + 100000;
+        update(); setTimeout(runBots, Math.random() * 600 + 100);
+    }
+
+    function loop() {
+        let t = 30; state = "BETTING"; myBets = {TÀI:0, XỈU:0}; botBets = {TÀI:0, XỈU:0};
+        document.getElementById('bowl').style.opacity = "1"; document.getElementById('bowl').style.transform = "translate(0,0)";
+        runBots();
+        const itv = setInterval(() => {
+            t--; document.getElementById('timer').innerText = t;
+            if(t <= 0) { clearInterval(itv); state = "WAITING"; document.getElementById('timer').innerText = "MỞ"; }
+        }, 1000);
+    }
+
+    function openResult() {
+        state = "RESULT";
+        const d = [Math.floor(Math.random()*6)+1, Math.floor(Math.random()*6)+1, Math.floor(Math.random()*6)+1];
+        document.getElementById('d1').innerText = d[0]; document.getElementById('d2').innerText = d[1]; document.getElementById('d3').innerText = d[2];
+        const win = (d[0]+d[1]+d[2]) >= 11 ? "TÀI" : "XỈU";
+        if(myBets[win] > 0) { user.bal += (myBets[win] * 1.98); alert("Bạn thắng!"); }
+        save(); update(); setTimeout(loop, 4000);
+    }
+
+    function bank(type) {
+        const amt = parseInt(document.getElementById(type==='NẠP'?'in-dep':'in-wd').value);
+        if(!amt || amt < 100000) return alert("Tối thiểu 100k");
+        if(type==='RÚT') {
+            if(user.bal < amt) return alert("Không đủ tiền");
+            if(!document.getElementById('wd-stk').value) return alert("Nhập STK");
+            user.bal -= amt;
+        }
+        const log = { type, amt, s: 'Đang xử lý', p: 0 };
+        user.logs.unshift(log); save(); update();
+        let s = Date.now();
+        let itv = setInterval(() => {
+            let el = Date.now() - s; log.p = (el/30000)*100; update();
+            if(el >= 30000) { clearInterval(itv); log.s = 'Thành công'; if(type==='NẠP') user.bal += amt; save(); update(); }
+        }, 1000);
+    }
+
+    function updateQR() {
+        const amt = document.getElementById('in-dep').value;
+        const memo = "NAP_" + user.u.toUpperCase();
+        document.getElementById('dep-memo').innerText = memo;
+        document.getElementById('qr-img').src = `https://img.vietqr.io/image/vietcombank-9385910341-compact.png?amount=${amt}&addInfo=${memo}`;
+    }
+
+    function placeBet(s) { if(state === "BETTING" && user.bal >= currentChip) { user.bal -= currentChip; myBets[s] += currentChip; update(); } }
+    function setChip(a, el) { document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); currentChip = a; }
+    function save() { localStorage.setItem('u_'+user.u, JSON.stringify(user)); }
+    function update() {
+        document.getElementById('u-bal').innerText = Math.floor(user.bal).toLocaleString();
+        document.getElementById('total-tai').innerText = (botBets.TÀI + myBets.TÀI).toLocaleString();
+        document.getElementById('total-xiu').innerText = (botBets.XỈU + myBets.XỈU).toLocaleString();
+        document.getElementById('my-tai').innerText = myBets.TÀI > 0 ? "Cược: "+myBets.TÀI.toLocaleString() : "";
+        document.getElementById('my-xiu').innerText = myBets.XỈU > 0 ? "Cược: "+myBets.XỈU.toLocaleString() : "";
+        const r = (t) => user.logs.filter(l=>l.type===t).map(l=>`<div style="font-size:10px; margin-top:5px; text-align:left;">${l.amt.toLocaleString()} - ${l.s}<div style="height:3px; background:#333;"><div style="height:100%; background:#0f0; width:${l.p}%"></div></div></div>`).join('');
+        document.getElementById('list-dep').innerHTML = r('NẠP'); document.getElementById('list-wd').innerHTML = r('RÚT');
+    }
+
+    function openTop() {
+        let all = []; for(let i=0; i<localStorage.length; i++) { let k = localStorage.key(i); if(k.startsWith('u_')) all.push(JSON.parse(localStorage.getItem(k))); }
+        all.sort((a,b)=>b.bal-a.bal);
+        document.getElementById('top-list').innerHTML = all.slice(0,5).map((u,i)=>`<div style="display:flex; justify-content:space-between; padding:8px;"><span>${i+1}. ${u.nick}</span><span style="color:gold;">${Math.floor(u.bal).toLocaleString()}</span></div>`).join('');
+        document.getElementById('pop-top').style.display='flex';
+    }
+
+    function openTab(t) { document.getElementById('pop-'+t).style.display='flex'; if(t==='dep') updateQR(); }
+    function closePop() { document.querySelectorAll('.popup').forEach(p=>p.style.display='none'); }
+
+    let drg = false; let sX, sY;
+    function startDrag(e) { if(state==="WAITING") { drg = true; let t = e.type.includes('touch')?e.touches[0]:e; sX = t.clientX; sY = t.clientY; } }
+    document.addEventListener('touchmove', (e) => {
+        if(!drg) return; let t = e.touches[0]; let dx = t.clientX - sX; let dy = t.clientY - sY;
+        document.getElementById('bowl').style.transform = `translate(${dx}px, ${dy}px)`;
+        if(Math.abs(dx)>70 || Math.abs(dy)>70) { drg = false; document.getElementById('bowl').style.opacity="0"; openResult(); }
+    });
+</script>
+</body>
+</html>
